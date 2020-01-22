@@ -32,10 +32,6 @@ def almacenes():
     cur = mysql.connection.cursor()
     cur.execute('select * from adm_almacen')
     almacenes = cur.fetchall()
-#    return "ok"
-
-
-# """
     resultado = []
     for almacen in almacenes:
         almacen_datos = {}
@@ -46,7 +42,7 @@ def almacenes():
 
         cur2 = mysql.connect.cursor()
         cur2.execute(
-            'select * from adm_almacen_piso where idAlmacen = {0}'.format(almacen_datos['id_almacen']))
+            'select * from adm_almacen_piso where idAlmacen = {0}'.format(almacen[0]))
         pisos = cur2.fetchall()
         resultado_pisos = []
         for piso in pisos:
@@ -56,17 +52,16 @@ def almacenes():
             piso_datos['id_almacen_piso'] = piso[2]
             resultado_pisos.append(piso_datos)
 
-        resultado['pisos'] = resultado_pisos
+        almacen_datos['pisos'] = resultado_pisos
         resultado.append(almacen_datos)
     return jsonify(resultado)
 
 
-@app.route('/pisos/', methods=['GET'])
-def pisos_almacenes():
-    almacen_datos = 1
+@app.route('/pisos/<int:id>', methods=['GET'])
+def pisos_almacenes(id):
     cur2 = mysql.connect.cursor()
     cur2.execute(
-        'select * from adm_almacen_piso where idAlmacen = {0}'.format(almacen_datos))
+        'select * from adm_almacen_piso where idAlmacen = {0}'.format(id))
     pisos = cur2.fetchall()
     resultado_pisos = []
     for piso in pisos:
